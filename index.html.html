@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>기흥모터스 경영진단 BI 대시보드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 데이터 라벨 플러그인 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap');
+        
+        :root {
+            --primary-blue: #1e3a8a;
+            --success-emerald: #10b981;
+            --warning-amber: #f59e0b;
+            --danger-red: #ef4444;
+            --slate-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--slate-bg);
+            color: #1e293b;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 1.25rem;
+            box-shadow: 0 10px 40px -10px rgba(30, 58, 138, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #1e3a8a 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        .status-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.98); opacity: 0.9; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.98); opacity: 0.9; }
+        }
+
+        .decision-box {
+            background: linear-gradient(145deg, rgba(30, 58, 138, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .simulation-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="py-12 px-4">
+
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+            <div>
+                <h1 class="text-4xl font-extrabold tracking-tight text-slate-900">
+                    기흥모터스 <span class="gradient-text">경영진단 리포트</span>
+                </h1>
+                <p class="text-slate-500 mt-2 font-medium italic">Strategic Financial Analysis & Recovery Roadmap (2021-2025)</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <div class="status-badge px-4 py-2 bg-red-100 text-red-700 rounded-full text-sm font-bold border border-red-200">
+                    <i class="fa-solid fa-triangle-exclamation mr-2"></i>위험: 한계 기업 단계
+                </div>
+            </div>
+        </header>
+
+        <!-- 1. Corporate Overview Section -->
+        <section class="glass-card p-8 mb-10 border-l-8 border-blue-900">
+            <div class="flex items-center justify-between mb-6">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-id-card text-2xl text-blue-900"></i>
+                    <h2 class="text-2xl font-bold text-slate-800">1. 기업 개요 및 전략 진단</h2>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest block">Entity Type</span>
+                    <span class="text-sm font-bold text-blue-900">유한회사 기흥모터스</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="space-y-3">
+                    <h4 class="font-bold text-blue-900 flex items-center gap-2">
+                        <i class="fa-solid fa-motorcycle"></i> 핵심 비즈니스 및 지배구조
+                    </h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        프리미엄 모터사이클 수입 판매 및 정비 서비스. **오너 이계웅 대표가 지분 100%를 보유**한 폐쇄적 지배구조를 가진 유한회사로서 2022년 매출 1,000억 시대를 열었으나 현재 급격한 하락세에 직면함.
+                    </p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-blue-900 flex items-center gap-2">
+                        <i class="fa-solid fa-route"></i> 전략적 변곡점
+                    </h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        2023년부터 시장 수요 감소와 관계사 자금 유출 리스크가 겹치며 **'수익성 악화 → 부채 증가 → 자본 잠식'**의 악순환 진입.
+                    </p>
+                </div>
+                <div class="space-y-3">
+                    <h4 class="font-bold text-red-600 flex items-center gap-2">
+                        <i class="fa-solid fa-land-mine-on"></i> 현재 지위
+                    </h4>
+                    <p class="text-sm text-slate-600 leading-relaxed font-semibold">
+                        영업 현금흐름으로 이자조차 감당하기 어려운 **'Zombie Company'** 단계. 특수관계자 대여금 부실화로 자생력 상실.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+            <div class="glass-card p-6 border-t-4 border-blue-900">
+                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Revenue 2025</p>
+                <div class="text-3xl font-black text-slate-900">612.7억</div>
+                <div class="text-red-500 text-xs font-bold mt-2 italic"><i class="fa-solid fa-arrow-down"></i> 31.4% (vs 2021)</div>
+            </div>
+            <div class="glass-card p-6 border-t-4 border-emerald-500">
+                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Operating Profit</p>
+                <div class="text-3xl font-black text-red-600">-98.0억</div>
+                <div class="text-slate-500 text-xs font-bold mt-2 uppercase tracking-tight">역대 최대 적자 기록</div>
+            </div>
+            <div class="glass-card p-6 border-t-4 border-amber-500">
+                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Debt Ratio</p>
+                <div class="text-3xl font-black text-amber-600">1,071.6%</div>
+                <div class="text-amber-700 text-xs font-bold mt-2 italic">자본 잠식 위기</div>
+            </div>
+            <div class="glass-card p-6 border-t-4 border-red-500">
+                <p class="text-xs font-bold text-slate-400 uppercase mb-2">Available Cash</p>
+                <div class="text-3xl font-black text-red-600">1.8억</div>
+                <div class="text-red-700 text-xs font-bold mt-2 underline">유동성 고갈</div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
+            <!-- 2. Profit Structure & Efficiency -->
+            <div class="glass-card p-8 lg:col-span-2">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-slate-800 italic">2. Profit Structure & Efficiency</h3>
+                    <div class="flex gap-4 text-[10px] md:text-xs font-bold">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-900 rounded"></span> 매출액</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-500 rounded"></span> 매출이익</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-amber-500 rounded"></span> 판관비(-)</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-indigo-500 rounded"></span> 순이익(+/-)</span>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 480px;">
+                    <canvas id="profitChart"></canvas>
+                </div>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-red-50 p-5 rounded-xl border border-red-100">
+                        <h5 class="text-sm font-bold text-red-700 mb-2"><i class="fa-solid fa-triangle-exclamation mr-2"></i>광고선전비의 역설 (Marketing Inefficiency)</h5>
+                        <p class="text-xs text-red-800 leading-relaxed font-medium">
+                            매출이 30% 급감하는 경영 위기 상황에서도 **2025년 광고선전비는 오히려 2배 이상 폭증(43.6억)**했습니다. 이는 악성 재고 소진을 위한 고육책으로 보이나, 실제 매출 증대로 이어지지 못하고 영업 적자폭만 98억으로 키우는 **'비용의 늪'**이 되었습니다.
+                        </p>
+                    </div>
+                    <div class="bg-blue-50 p-5 rounded-xl border border-blue-100">
+                        <h5 class="text-sm font-bold text-blue-800 mb-2"><i class="fa-solid fa-circle-info mr-2"></i>판관비 구조의 경직성</h5>
+                        <p class="text-xs text-blue-700 leading-relaxed">
+                            매출 하락세에 연동된 유연한 비용 집행이 이루어지지 않고 있습니다. 인건비 및 고정성 판관비가 매출이익을 상회하는 구조가 고착화되어, 본업의 수익 구조가 사실상 붕괴된 상태입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Asset Efficiency & Turnover -->
+            <div class="glass-card p-8 lg:col-span-2">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-slate-800 italic">3. Asset Efficiency & Turnover</h3>
+                    <div class="flex gap-4 text-[10px] md:text-xs font-bold">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-emerald-500 rounded"></span> 재고자산</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-800 rounded"></span> 매출채권</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-orange-500"></span> 재고회전율</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-indigo-600"></span> 채권회전율</span>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 450px;">
+                    <canvas id="assetChart"></canvas>
+                </div>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <p class="text-sm text-slate-500 leading-relaxed bg-emerald-50 p-4 rounded-xl border border-emerald-100">
+                        <i class="fa-solid fa-circle-info mr-1 text-emerald-700"></i> **자산 효율성 급락:** 2022년 재고 자산이 폭증한 이후 회전율이 3.1회까지 하락하며 현금 흐름을 압박하고 있습니다.
+                    </p>
+                    <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                        <h5 class="text-xs font-bold text-red-700 mb-1"><i class="fa-solid fa-triangle-exclamation mr-1"></i> 자산 수증의 역설 및 실질 자본 잠식</h5>
+                        <p class="text-[11px] text-red-800 leading-snug">
+                            2024년 대규모 손실로 자본잠식 위기에 처했으나, **오너(이계웅 대표)의 증여로 이루어진 115억 규모의 부동산 수증**을 통해 간신히 표면적 자본을 유지 중입니다. 하지만 **379억 원 규모의 특수관계인 대여금 및 채권 합계**가 실질적으로 회수 불가능한 '부실 자산'으로 남아 있어, 장부상 자본(75억)은 사실상 **허수에 불과**합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Capital & Risk Management -->
+            <div class="glass-card p-8 lg:col-span-2">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-slate-800 italic">4. Capital & Risk Management</h3>
+                    <div class="flex gap-4 text-[10px] md:text-xs font-bold">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-900 rounded"></span> 단기차입금</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 bg-slate-300 rounded"></span> 장기차입금</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-0.5 bg-red-500"></span> 이자보상배율</span>
+                    </div>
+                </div>
+                <div class="chart-container" style="height: 480px;">
+                    <canvas id="riskChart"></canvas>
+                </div>
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <p class="text-sm text-slate-500 leading-relaxed bg-amber-50 p-4 rounded-xl border border-amber-100">
+                        <i class="fa-solid fa-circle-info mr-1 text-amber-700"></i> **단기 부채 편중 현상:** 2023년부터 장기차입금 비중이 급감하고 단기차입금이 기하급수적으로 폭증했습니다. 2025년 기준 단기 비중이 압도적이며 상환 압박이 극에 달한 상태입니다.
+                    </p>
+                    <div class="bg-slate-100 p-4 rounded-xl border border-slate-200">
+                        <h5 class="text-xs font-bold text-slate-700 mb-2"><i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> 이자보상배율의 의미</h5>
+                        <p class="text-[11px] text-slate-600 leading-snug font-medium">
+                            기업의 채무상환능력을 나타냅니다. 현재 **-6.6**으로, 영업 수익으로는 이자 지출조차 감당 불가능하여 차입에 의존해 차입을 갚는 악순환이 고착화되었습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 경영 정상화 시나리오 (Extended with Asset Difference & Simulation) -->
+            <div class="glass-card p-8 bg-slate-900 text-white border-none lg:col-span-2">
+                <div class="flex items-center justify-between mb-8">
+                    <h3 class="text-2xl font-bold flex items-center gap-2 text-emerald-400">
+                        <i class="fa-solid fa-shield-halved"></i> 5. 경영 정상화 전략 제언
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] bg-emerald-600 px-2 py-1 rounded font-bold uppercase tracking-wider">Target: Debt Ratio 200%</span>
+                        <span class="text-[10px] bg-red-600 px-2 py-1 rounded font-bold uppercase tracking-wider">Total Restructuring</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-12">
+                    <!-- 1. 개요 -->
+                    <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <h4 class="text-lg font-bold text-blue-400 mb-3"><span class="text-emerald-400 mr-2">1.</span> 개요</h4>
+                        <p class="text-sm text-slate-300 leading-relaxed font-medium">
+                            구조적 결함(차입금 폭증 및 관계사 부실) 해소를 위해 **영업 효율화, 금융 구조조정, 재무구조 개선**이 동시다발적으로 실행되어야 합니다. 특히 영업만으로는 부채 원금을 감당할 수 없으므로 자본 확충과 자산 매각이 정상화의 핵심입니다.
+                        </p>
+                    </div>
+
+                    <!-- 2. 구체적 실행 방안 -->
+                    <div class="space-y-6">
+                        <h4 class="text-lg font-bold text-blue-400"><span class="text-emerald-400 mr-2">2.</span> 구체적 실행 방안</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-emerald-500/50 transition-colors">
+                                <h5 class="font-bold text-emerald-400 mb-4 text-base border-b border-emerald-400/30 pb-2">1) 영업활동 효율화 필수</h5>
+                                <p class="text-xs text-slate-300 leading-relaxed">
+                                    시장 점유율 회복을 통한 **매출 증대**와 더불어, **판관비 총액 20% 즉시 절감**(불요불급한 광고선전비 대폭 삭감, 인건비 최적화 등)을 통해 영업 현금흐름(OCF)을 플러스로 반전시켜야 합니다.
+                                </p>
+                            </div>
+                            <div class="bg-white/5 p-6 rounded-xl border border-white/10 hover:border-emerald-500/50 transition-colors">
+                                <h5 class="font-bold text-emerald-400 mb-4 text-base border-b border-emerald-400/30 pb-2">2) 금융 구조조정 및 자본 확충</h5>
+                                <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                                    금융권과의 협의를 통해 **부채의 출자 전환(Debt-to-Equity Swap)**을 추진, 재무 건전성을 확보해야 합니다.
+                                </p>
+                                <div class="bg-blue-900/30 p-4 rounded-lg border border-blue-500/20">
+                                    <ul class="text-[11px] text-slate-300 list-disc ml-4 space-y-2 font-bold">
+                                        <li>대규모 <span class="text-emerald-400 underline">M&A (사업권 양도)</span> 검토</li>
+                                        <li><span class="text-emerald-400 underline">오너의 강력한 추가 출자</span> 결단</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3) 재무구조 개선 - 최종 결단 및 시나리오별 차이 -->
+                        <div class="decision-box p-8 rounded-2xl mt-10 shadow-2xl relative">
+                            <div class="absolute -top-4 left-8 bg-emerald-500 text-slate-900 text-[10px] font-black px-4 py-1 rounded-full shadow-lg tracking-widest">FINAL STRATEGIC DECISION</div>
+                            <h5 class="font-bold text-white mb-6 text-xl flex items-center gap-3">
+                                <i class="fa-solid fa-key text-amber-400"></i> 3) 재무구조 개선 (부채 상환 및 자산 매각)
+                            </h5>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                                <!-- Scenario A -->
+                                <div class="p-6 bg-blue-900/40 rounded-2xl border border-blue-500/40">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <p class="text-sm font-bold text-white underline underline-offset-4">시나리오 A: 공격적 매각</p>
+                                        <span class="text-[9px] bg-blue-600 px-2 py-0.5 rounded font-black">LEASING MODEL</span>
+                                    </div>
+                                    <div class="space-y-3 mb-6">
+                                        <p class="text-xs text-slate-300 leading-relaxed"><strong>매각 범위:</strong> 보유 **토지 전량(325.4억)** 즉시 매각</p>
+                                        <p class="text-xs text-slate-300 leading-relaxed"><strong>운영 변화:</strong> 본사 및 사업장을 **임차 방식으로 전환**. 고정 자산 중부담 해소 및 즉각적 현금 유입.</p>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                                        <div><span class="text-[10px] text-blue-300 block">매각 예상액</span><span class="text-xl font-black text-white">325.4억</span></div>
+                                        <div><span class="text-[10px] text-blue-300 block">필요 증자</span><span class="text-xl font-black text-emerald-400">약 564억</span></div>
+                                    </div>
+                                </div>
+
+                                <!-- Scenario B -->
+                                <div class="p-6 bg-slate-800/80 rounded-2xl border border-slate-600">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <p class="text-sm font-bold text-white underline underline-offset-4">시나리오 B: 사옥 보존</p>
+                                        <span class="text-[9px] bg-slate-700 px-2 py-0.5 rounded font-black">OWNERSHIP MODEL</span>
+                                    </div>
+                                    <div class="space-y-3 mb-6">
+                                        <p class="text-xs text-slate-300 leading-relaxed"><strong>매각 범위:</strong> 핵심 사옥 제외 **비핵심 부동산만 매각(249.4억)**</p>
+                                        <p class="text-xs text-slate-300 leading-relaxed"><strong>운영 변화:</strong> 사업 기반인 **사옥 소유권 유지**. 단, 매각 대금이 적어 시나리오 A보다 **오너의 추가 자금 부담**이 큼.</p>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4 pt-4 border-t border-white/10">
+                                        <div><span class="text-[10px] text-slate-400 block">매각 예상액</span><span class="text-xl font-black text-white">249.4억</span></div>
+                                        <div><span class="text-[10px] text-slate-400 block">필요 증자</span><span class="text-xl font-black text-amber-500">약 640억</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Financial Simulation Table (Pro-forma) -->
+                            <div class="mt-6">
+                                <h6 class="text-sm font-bold text-emerald-400 mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-simple"></i> 정상화 성공 시 재무 구조 시뮬레이션 (Target: Debt Ratio 200%)
+                                </h6>
+                                <div class="overflow-hidden rounded-xl border border-white/10">
+                                    <table class="w-full text-[11px] text-left">
+                                        <thead>
+                                            <tr class="bg-white/10 text-slate-300 uppercase tracking-tighter">
+                                                <th class="p-3">구분 (단위: 억 원)</th>
+                                                <th class="p-3">2025년 현재 (실질)</th>
+                                                <th class="p-3 text-emerald-400">정상화 후 (목표)</th>
+                                                <th class="p-3">주요 변화 요인</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-white/5">
+                                            <tr>
+                                                <td class="p-3 font-bold">총 자산 (Assets)</td>
+                                                <td class="p-3">520.2</td>
+                                                <td class="p-3 text-emerald-400 font-black">225.0 ~ 300.0</td>
+                                                <td class="p-3 text-slate-400">자산 매각(토지 등) 및 부실 채권 상각 반영</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-3 font-bold">총 부채 (Debt)</td>
+                                                <td class="p-3 text-red-400">445.1</td>
+                                                <td class="p-3 text-emerald-400 font-black">150.0 ~ 200.0</td>
+                                                <td class="p-3 text-slate-400">자산 매각 대금으로 단기차입금 우선 상환</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="p-3 font-bold">자본 총계 (Equity)</td>
+                                                <td class="p-3 text-red-500 italic">75.1 (실질 -303.9)</td>
+                                                <td class="p-3 text-emerald-400 font-black">75.0 ~ 100.0</td>
+                                                <td class="p-3 text-slate-400">500억+ 증자 및 부채의 출자전환으로 결손 보전</td>
+                                            </tr>
+                                            <tr class="bg-emerald-500/10">
+                                                <td class="p-3 font-bold text-emerald-300">부채비율 (Debt Ratio)</td>
+                                                <td class="p-3 text-red-400">1,071.6%</td>
+                                                <td class="p-3 text-emerald-400 font-black italic">200% (Target)</td>
+                                                <td class="p-3 text-emerald-300 font-bold">건전 경영을 위한 골든 크로스 달성</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Warning Note -->
+                    <div class="p-5 bg-red-900/40 border border-red-500/40 rounded-2xl flex items-start gap-4 shadow-lg shadow-red-900/20">
+                        <i class="fa-solid fa-circle-exclamation text-red-500 text-2xl mt-1"></i>
+                        <p class="text-[12px] text-slate-200 leading-snug">
+                            <strong class="text-red-400 font-bold uppercase block mb-1 text-sm"><i class="fa-solid fa-biohazard mr-1"></i> Core Warning:</strong> 
+                            특수관계인 대여금 및 채권(379억)의 실질적 부실을 완전히 해소하거나 리스크를 차단하지 못할 경우, 외부 투자 유치 및 금융권의 출자 전환 협상은 사실상 불가능함을 경영진은 엄중히 인지해야 합니다. 깡통 자산의 정리가 정상화의 제1전제입니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart Global Defaults
+        Chart.defaults.color = '#94a3b8';
+        Chart.defaults.font.family = 'Pretendard';
+        Chart.register(ChartDataLabels);
+
+        // 1. Profit Structure & Efficiency
+        new Chart(document.getElementById('profitChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [
+                    { label: '매출액', data: [893.0, 1005.2, 896.5, 726.0, 612.7], backgroundColor: '#1e3a8a', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8, datalabels: { align: 'top', anchor: 'end' } },
+                    { label: '매출이익', data: [282.1, 244.2, 177.9, 147.3, 113.9], backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8, datalabels: { align: 'top', anchor: 'end' } },
+                    { label: '판관비 (-)', data: [-212.0, -219.5, -233.4, -205.6, -211.9], backgroundColor: '#f59e0b', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8, datalabels: { align: 'bottom', anchor: 'start', formatter: (v) => Math.abs(v).toFixed(1) } },
+                    { label: '순이익', data: [54.6, 30.5, -61.0, -176.8, -117.0], backgroundColor: '#6366f1', borderRadius: 4, barPercentage: 0.85, categoryPercentage: 0.8, datalabels: { align: (c) => c.dataset.data[c.dataIndex] >= 0 ? 'top' : 'bottom', anchor: (c) => c.dataset.data[c.dataIndex] >= 0 ? 'end' : 'start', color: (c) => c.dataset.data[c.dataIndex] >= 0 ? '#6366f1' : '#ef4444' } },
+                    { label: '매출총이익률 (%)', data: [31.6, 24.3, 19.8, 20.3, 18.6], type: 'line', borderColor: '#10b981', borderWidth: 2, pointRadius: 4, yAxisID: 'y1', datalabels: { display: false } }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30, bottom: 30 } }, scales: { y: { beginAtZero: false, grid: { color: (c) => c.tick.value === 0 ? '#475569' : 'rgba(0,0,0,0.05)', lineWidth: (c) => c.tick.value === 0 ? 2 : 1 }, title: { display: true, text: '금액(억 원)', font: { size: 10, weight: 'bold' } } }, y1: { position: 'right', grid: { display: false }, min: -30, max: 60, title: { display: true, text: '이익률(%)', font: { size: 10, weight: 'bold' } } } }, plugins: { legend: { display: false }, datalabels: { font: { weight: 'bold', size: 9 }, formatter: (v) => v === 0 ? '' : v.toFixed(1) } } }
+        });
+
+        // 3. Asset Efficiency & Turnover
+        new Chart(document.getElementById('assetChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [
+                    { label: '재고자산 (억)', data: [104.3, 257.6, 216.4, 197.1, 125.4], backgroundColor: '#10b981', borderRadius: 4, barPercentage: 0.7, datalabels: { align: 'top', anchor: 'end' } },
+                    { label: '매출채권 (억)', data: [28.1, 72.4, 62.5, 28.7, 16.5], backgroundColor: '#1e3a8a', borderRadius: 4, barPercentage: 0.7, datalabels: { align: 'top', anchor: 'end' } },
+                    { label: '재고자산회전율 (회)', data: [6.9, 4.2, 3.0, 2.8, 3.1], type: 'line', borderColor: '#f59e0b', borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#f59e0b', yAxisID: 'y1', datalabels: { align: 'top', anchor: 'end', color: '#b45309', formatter: (v) => v + '회' } },
+                    { label: '매출채권회전율 (회)', data: [39.4, 20.0, 13.3, 15.9, 27.1], type: 'line', borderColor: '#6366f1', borderWidth: 3, pointRadius: 5, pointBackgroundColor: '#6366f1', yAxisID: 'y1', datalabels: { align: 'top', anchor: 'end', color: '#4338ca', formatter: (v) => v + '회' } }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 30 } }, scales: { y: { beginAtZero: true, title: { display: true, text: '금액(억 원)', font: { size: 10, weight: 'bold' } } }, y1: { position: 'right', grid: { display: false }, beginAtZero: true, max: 50, title: { display: true, text: '회전율(회)', font: { size: 10, weight: 'bold' } } } }, plugins: { legend: { display: false }, datalabels: { font: { weight: 'bold', size: 9 }, formatter: (v) => v.toFixed(1) } } }
+        });
+
+        // 4. Capital & Risk Management
+        new Chart(document.getElementById('riskChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2021', '2022', '2023', '2024', '2025'],
+                datasets: [
+                    { label: '단기차입금 (억)', data: [58.1, 151.9, 338.2, 339.3, 445.1], backgroundColor: '#1e3a8a', borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.6, datalabels: { align: 'top', anchor: 'end', color: '#1e3a8a', font: { weight: 'bold', size: 10 }, formatter: (v) => v.toFixed(1) } },
+                    { label: '장기차입금 (억)', data: [51.6, 109.3, 52.5, 52.5, 0.0], backgroundColor: '#cbd5e1', borderRadius: 4, barPercentage: 0.8, categoryPercentage: 0.6, datalabels: { align: 'top', anchor: 'end', color: '#64748b', font: { weight: 'bold', size: 10 }, formatter: (v) => v > 0 ? v.toFixed(1) : '' } },
+                    { label: '이자보상배율', data: [25.9, 2.9, -2.8, -2.5, -6.6], type: 'line', borderColor: '#ef4444', borderWidth: 3, pointRadius: 6, pointBackgroundColor: '#ef4444', yAxisID: 'y1', datalabels: { align: (c) => c.dataset.data[c.dataIndex] >= 0 ? 'top' : 'bottom', anchor: (c) => c.dataset.data[c.dataIndex] >= 0 ? 'end' : 'start', color: '#ef4444', font: { weight: 'bold', size: 11 }, formatter: (v) => v.toFixed(1) } }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 40, bottom: 20 } }, scales: { y: { beginAtZero: true, title: { display: true, text: '차입금(억 원)', font: { size: 10, weight: 'bold' } } }, y1: { position: 'right', grid: { display: false }, title: { display: true, text: '배율', font: { size: 10, weight: 'bold' } } } }, plugins: { legend: { display: false } } }
+        });
+    </script>
+</body>
+</html>
